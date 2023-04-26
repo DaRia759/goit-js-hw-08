@@ -4,6 +4,8 @@ const STORAGE_KEY = "feedback-form-state";
 
 const inputText = {};
 
+// const data = { email, message };
+
 const refs = {
     form: document.querySelector('.feedback-form'),
     textarea: document.querySelector('.feedback-form textarea'),
@@ -33,9 +35,9 @@ function onFormSubmit(event) {
 };
 
 function onTextareaInput(event) {
-    const { email, message } = event.target.value;
+    data = event.target.value;
 
-    localStorage.setItem(STORAGE_KEY, const { email, message });
+    localStorage.setItem(STORAGE_KEY, data);
 };
 
 
