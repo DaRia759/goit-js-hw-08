@@ -2,25 +2,40 @@ import throttle from "lodash.throttle";
 
 const STORAGE_KEY = "feedback-form-state";
 
-const inputText = {};
+const form = document.querySelector('.feedback-form');
+const email = document.querySelector('input[name="email"]');
+const message = document.querySelector('input[name="message"]');
 
-// const data = { email, message };
-
-const refs = {
-    form: document.querySelector('.feedback-form'),
-    textarea: document.querySelector('.feedback-form textarea'),
+const data = {
+    email: email.value,
+    message: message.value,
 };
 
-refs.form.addEventListener('submit', onFormSubmit);
-refs.textarea.addEventListener('input', throttle(onTextareaInput, 500));
+let inputText = {};
 
-refs.form.addEventListener('input', event => {
-    inputText[event.target.name] = event.target.value;
-
-    console.log(inputText);
-});
+form.addEventListener('input', throttle(savedData, 500));
 
 populateTextarea();
+
+function savedData(event) {
+    event.preventDefault;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+
+function reloadedPage(event) {
+    const dataFromLocaleStorage = localStorage.getItem('STORAGE_KEY');
+    const parsedDataFromLocalStorage = JSON.parse(dataFromLocaleStorage);
+
+    if (dataFromLocaleStorage) {
+        email.value = parsedDataFromLocalStorage.email;
+        message.value = parsedDataFromLocalStorage.message;
+    } else {
+        email.value = "";
+        message.value = "";
+    }
+};
+
+form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(event) {
     event.preventDefault();
@@ -34,18 +49,6 @@ function onFormSubmit(event) {
     event.currentTarget.reset();
 };
 
-function onTextareaInput(event) {
-    data = event.target.value;
-
-    localStorage.setItem(STORAGE_KEY, data);
-};
-
-
 function populateTextarea(event) {
-    const savedMessage = localStorage.getItem(STORAGE_KEY);
-
-    if (savedMessage) {
-        console.log(savedMessage);
-        refs.textarea.value = savedMessage;
-    }
+   refs.textContent = localStorage.getItem(STORAGE_KEY) || '';
 };
