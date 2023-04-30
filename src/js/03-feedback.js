@@ -3,52 +3,48 @@ import throttle from "lodash.throttle";
 const STORAGE_KEY = "feedback-form-state";
 
 const form = document.querySelector('.feedback-form');
-const email = document.querySelector('input[name="email"]');
-const message = document.querySelector('textarea[name="message"]');
+const emailInput = document.querySelector('input[name="email"]');
+const messageInput = document.querySelector('textarea[name="message"]');
 
-const data = {
-    email: email.value,
-    message: message.value,
-};
+const savedData = () => {
+    const email = emailInput.value;
+    const message = messageInput.value;
 
-let inputText = {};
+    const data = { email, message };
 
-form.addEventListener('input', throttle(savedData, 500));
-
-populateTextarea();
-
-function savedData(event) {
-    event.preventDefault;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 
-function reloadedPage(event) {
-    const dataFromLocaleStorage = localStorage.getItem('STORAGE_KEY');
-    const parsedDataFromLocalStorage = JSON.parse(dataFromLocaleStorage);
+// let inputText = {};
 
-    if (dataFromLocaleStorage) {
-        email.value = parsedDataFromLocalStorage.email;
-        message.value = parsedDataFromLocalStorage.message;
+form.addEventListener('input', throttle(savedData, 500));
+form.addEventListener('submit', onFormSubmit);
+
+savedDataFromLocalStorage();
+
+function savedDataFromLocalStorage() {
+    
+    const parsedDataFromLocalStorage = JSON.parse(localStorage.getItem('STORAGE_KEY'));
+
+    if (localStorage.getItem('STORAGE_KEY')) {
+        emailInput.value = parsedDataFromLocalStorage.email;
+        messageInput.value = parsedDataFromLocalStorage.message;
     } else {
-        email.value = "";
-        message.value = "";
+        emailInput.value = "";
+        messageInput.value = "";
     }
 };
 
-form.addEventListener('submit', onFormSubmit);
 
 function onFormSubmit(event) {
     event.preventDefault();
     
-    inputText = event.currentTarget.elements;
+    const getData = JSON.parse(localStorage.getItem('STORAGE_KEY'));
     
-    console.log({ email: email.value, message: message.value });
+    console.log(getData);
     
     localStorage.removeItem(STORAGE_KEY);
     
     event.currentTarget.reset();
 };
 
-function populateTextarea(event) {
-   data.textContent = localStorage.getItem(STORAGE_KEY) || '';
-};
