@@ -24,9 +24,9 @@ savedDataFromLocalStorage();
 
 function savedDataFromLocalStorage() {
     
-    const parsedDataFromLocalStorage = JSON.parse(localStorage.getItem('STORAGE_KEY'));
+    const parsedDataFromLocalStorage = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
-    if (localStorage.getItem('STORAGE_KEY')) {
+    if (localStorage.getItem(STORAGE_KEY)) {
         emailInput.value = parsedDataFromLocalStorage.email;
         messageInput.value = parsedDataFromLocalStorage.message;
     } else {
@@ -39,12 +39,17 @@ function savedDataFromLocalStorage() {
 function onFormSubmit(event) {
     event.preventDefault();
     
-    const getData = JSON.parse(localStorage.getItem('STORAGE_KEY'));
-    
-    console.log(getData);
-    
-    localStorage.removeItem(STORAGE_KEY);
-    
-    event.currentTarget.reset();
-};
+    const getData = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
+    if (emailInput.value === '' || messageInput.value === '') {
+        return alert('Please, fill in all fields!');
+    } else {
+        console.log(getData);
+    
+        localStorage.removeItem(STORAGE_KEY);
+    
+        event.currentTarget.reset();
+    };
+}
+    
+    
